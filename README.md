@@ -1,46 +1,55 @@
-# 🌸 Hanasuki (花好き): The Self-Evolving Academic AI Butler
+# 🌸 Hanasuki (花好き) AI Kernel - Beta 1.1
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-red.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Target: AAAI 2026](https://img.shields.io/badge/Research-AAAI%202026-blueviolet.svg)](https://aaai.org/Conferences/AAAI-26/)
-[![Hardware: Optimized for 8GB VRAM](https://img.shields.io/badge/Hardware-RTX%205060%20Optimized-green.svg)](#)
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
+![License](https://img.shields.io/badge/License-GPL%20v3-red)
+![Architecture](https://img.shields.io/badge/Architecture-HERO--A%2B-purple)
+![Status](https://img.shields.io/badge/Status-Beta%201.1-orange)
 
-> **“不仅仅是对话，更是逻辑的自我进化与知识坍塌的对抗。”**
+> **"不仅仅是对话，而是关于具身逻辑的自我演化。"**
 >
-> **Hanasuki** 是一个基于微内核架构的模块化智能管家系统。她致力于探索在**消费级硬件（RTX 5060 8GB）**环境下，如何通过算法架构升级，赋予本地小参数模型（<10B）超越其规模限制的逻辑严谨性与深度科研能力捏。
+> Hanasuki Beta 1.1 是一个基于 **HERO-A+** 架构的模块化智能管家。她专为受限硬件（如 **RTX 5060 8GB**）优化，通过 **ACLA 上下文锚定** 与 **LightRAG 双层逻辑图谱**，在本地端构建起一套具备“自研、自省、演化”能力的认知闭环捏。
 
 ---
 
-## 🏗️ 核心技术架构：HERO-A+
+## 🏗️ 核心架构 (HERO-A+ Architecture)
 
-Hanasuki 的进化由 **HERO-A+ (Hierarchical Evolution & Reliability-Oriented RAG - Advanced)** 架构驱动，旨在彻底解决模型“科研偷懒”与“工具调用幻觉”捏。
+Hanasuki 采用高度解耦的微内核设计，在 Beta 1.1 中全面实装了 **HERO-A+** 协议：
 
-
-
-### 1. 逻辑图谱双层索引 (LightRAG Implementation)
-不同于传统的扁平 RAG，Hanasuki 将知识沉淀为**双层结构**：
-* **微观事实层 (Local)**：捕捉实体间的精确三元组关联。
-* **宏观综述层 (Global)**：利用社区发现算法自动生成领域知识综述，赋予模型“全局视野”，防止在处理复杂课题时断章取义捏。
-
-### 2. 置信度驱动的犹豫机制 (Relign Protocol)
-集成可靠性对齐技术。当模型发现搜索参数不确定或信息缺失时，不再编造，而是触发 **`clarify`** 动作，主动向内核寻求反馈，从而物理性消灭工具调用幻觉。
-
-### 3. 自适应上下文逻辑锚定 (ACLA)
-针对显存受限环境的记忆优化算法。系统根据逻辑图谱计算历史片段的锚定分数 $S_{anchor}$，确保核心论据永远驻留上下文：
-$$S_{anchor} = \alpha \cdot \text{Recency} + \beta \cdot \text{GraphCentrality}$$
-
-### 4. 显存节流与推理加速
-* **KV Cache 4-bit 量化**：将 16k 上下文的显存占用压缩至 1GB 左右。
-* **目标驱动路由**：自研模式下根据任务动机（代码/逻辑/搜索）动态分配计算权重捏。
+* **ACLA (Adaptive Contextual Logic Anchoring)**: 动态计算上下文权重捏。通过公式 $S_{anchor} = 0.4 \cdot Recency + 0.6 \cdot \frac{Weight}{Threshold}$ 物理锁定核心逻辑节点，防止关键科研信息在长对话中丢失。
+* **Relign Protocol (犹豫机制)**: 强制执行“不确定性拦截”。模型在工具参数模糊时会自动触发 `clarify` 指令，拒绝产生学术幻觉捏。
+* **具身演化实验室**: 集成 `darwin_coder` 与 `python_executor`。支持在独立沙箱中编写、验证并持久化演化逻辑，实现真正的“逻辑自增长”捏。
 
 ---
 
-## 📂 模块化结构 (Repository Structure)
+## 🧠 双轨记忆系统 (Dual-Track Memory)
 
+为了在 8GB 显存下实现类人的长期记忆，我们构建了以下系统：
+
+### 1. 感性语义记忆 (Vector-RAG)
+* **引擎**: [LanceDB](https://lancedb.com/)
+* **优化**: 强制模型运行于 CPU，通过 Cosine Similarity 检索语义片段，不占用推理显存捏。
+
+### 2. 理性逻辑图谱 (LightRAG)
+* **引擎**: [NetworkX](https://networkx.org/)
+* **创新**: 实装 **Local + Global** 双层索引。自动聚类知识簇并生成高层摘要，解决 8B 模型“不见森林”的局限性捏。
+
+---
+
+## ⚙️ 硬件适配与显存优化 (VRAM Guard)
+
+针对 **RTX 5060 (8GB)** 优化的显存管理方案：
+
+| 显存容量 | 推荐 Profile | KV Cache 量化 | 优化策略 |
+| :--- | :--- | :--- | :--- |
+| **6GB** | Normal (2k) | Q4_K | 强制混合计算，限制 GPU 层数捏 |
+| **8GB** | **Learning (16k)** | **Q4_K (Active)** | **全显存加速，激活 ACLA 锚定逻辑** |
+| **12GB+** | Turbo (32k) | Q8_0 | 极致推理体验，支持 14B+ 模型捏 |
+
+---
+
+## 🚀 快速开始 (Quick Start)
+
+### 1. 安装环境
 ```bash
-Hanasuki/
-├── core/                # 驱动内核 (推理引擎、记忆中枢、重排算法)
-├── modules/             # 具身化插件 (Purify浏览器、Darwin代码沙箱等)
-├── ui/                  # 基于 PyQt6 的磨砂玻璃感交互界面
-├── data/                # 向量库与逻辑图谱持久化存储
-├── workspace/           # 物理隔离的代码演化实验区
-└── config.yaml          # 全局动力参数配置文件
+pip install -r requirements.txt
+playwright install chromium  # 激活学术搜索模块捏

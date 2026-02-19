@@ -1,0 +1,61 @@
+# -*- coding: utf-8 -*-
+# =================================================================
+# Project: Hanasuki (花好き) AI Kernel - HERO-A+ Edition
+# Version: Beta 1.1
+# License: GNU General Public License v3 (GPLv3)
+# Copyright (c) 2026 lovesang. All Rights Reserved.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License.
+#
+# [MISSION]: 统一管理 Hanasuki 的动力参数，实现环境自适应捏！🌸
+# =================================================================
+
+# --- [SYSTEM]: 核心元数据捏 ---
+system:
+  name: "Hanasuki"      # 项目代号：花好き
+  version: "11.5.0"     # 内部逻辑版本号
+  author: "lovesang"    # 开发者署名
+
+# --- [MODEL]: 推理引擎与显存 Profile 配置捏 ---
+# model:
+  backend: "llama_cpp"  # 推理后端，默认使用高性能的 llama-cpp-python
+  
+  # [PATH]: 核心权重文件路径捏。
+  # 采用相对路径确保项目在不同设备间的物理可移植性捏。
+  path: "models/Josiefied-Qwen3-8B-abliterated-v1-q4_k_m.gguf"
+  
+  # [PROFILE_NORMAL]: 日常交互模式。
+  # 针对 8GB 显存优化，平衡响应速度与显存占用捏。
+  profile_normal:
+    n_gpu_layers: -1    # -1 表示将所有模型层卸载至 GPU 加速捏
+    n_ctx: 8192         # 日常上下文长度定为 8k，确保显存余量充足
+    flash_attn: true    # 开启 Flash Attention 显著降低长文本时的显存压力捏
+  
+  # [PROFILE_LEARNING]: 深度自研模式。
+  # 自动切换至长上下文，为 ACLA 算法提供更广阔的检索窗口捏。
+  profile_learning:
+    n_gpu_layers: -1    # 保持全显存加速
+    n_ctx: 16384        # 自研模式下扩展至 16k 上下文，通过 4-bit KV Cache 量化维持稳定
+    flash_attn: true    # 必须开启以支撑长文本计算
+
+  temperature: 0.7      # 采样温度，0.7 能在学术严谨性与管家灵动性间取得完美平衡捏
+
+# --- [MODULES]: 记忆与执行插件路径捏 ---
+modules:
+  # [EMBEDDING]: 感性核心（向量模型）路径。
+  # 推荐使用 BGE 系列中文小模型，运行在 CPU 上以节约显存捏。
+  embedding_model: "models/embeddings/bge-small-zh-v1.5"
+  
+  # [VECTOR_DB]: 向量数据库（海马体）存储位置。
+  vector_db_path: "data/vector_db"
+  
+  # [WORKSPACE]: 具身沙箱（演化实验室）根目录。
+  # 所有 Darwin-Coder 生成的代码均受限在此运行捏。
+  workspace_root: "workspace"
+
+# --- [LEARNING]: 自进化动力参数捏 ---
+learning:
+  idle_threshold: 180   # 挂机自动进化阈值（秒）。大大闲置键盘 3 分钟后，Hanasuki 开始自研捏
+  max_retries: 2        # 逻辑链条提取失败后的最大重试次数，防止进入逻辑死循环捏
