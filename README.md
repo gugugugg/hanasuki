@@ -1,46 +1,161 @@
-# 🌸 Hanasuki (花好き): The Self-Evolving Academic AI Butler
+# 🌸 Hanasuki (花好き) V9.0
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-red.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Target: AAAI 2026](https://img.shields.io/badge/Research-AAAI%202026-blueviolet.svg)](https://aaai.org/Conferences/AAAI-26/)
-[![Hardware: Optimized for 8GB VRAM](https://img.shields.io/badge/Hardware-RTX%205060%20Optimized-green.svg)](#)
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
+![License](https://img.shields.io/badge/License-GPL%20v3-red)
+![Architecture](https://img.shields.io/badge/Architecture-Microkernel-purple)
+![Status](https://img.shields.io/badge/Status-Stable%20(Build%202026)-success)
 
-> **“不仅仅是对话，更是逻辑的自我进化与知识坍塌的对抗。”**
+> **"不仅仅是对话，而是关于进化。"**
 >
-> **Hanasuki** 是一个基于微内核架构的模块化智能管家系统。她致力于探索在**消费级硬件（RTX 5060 8GB）**环境下，如何通过算法架构升级，赋予本地小参数模型（<10B）超越其规模限制的逻辑严谨性与深度科研能力捏。
+> Hanasuki 是一个基于微内核架构与双轨记忆系统的模块化智能管家。她具备“自研、自省、演化”的能力，能够通过感性与理性的双重驱动，在本地端构建起一套完整的认知进化闭环。
 
 ---
 
-## 🏗️ 核心技术架构：HERO-A+
+## 📖 目录 (Table of Contents)
 
-Hanasuki 的进化由 **HERO-A+ (Hierarchical Evolution & Reliability-Oriented RAG - Advanced)** 架构驱动，旨在彻底解决模型“科研偷懒”与“工具调用幻觉”捏。
-
-
-
-### 1. 逻辑图谱双层索引 (LightRAG Implementation)
-不同于传统的扁平 RAG，Hanasuki 将知识沉淀为**双层结构**：
-* **微观事实层 (Local)**：捕捉实体间的精确三元组关联。
-* **宏观综述层 (Global)**：利用社区发现算法自动生成领域知识综述，赋予模型“全局视野”，防止在处理复杂课题时断章取义捏。
-
-### 2. 置信度驱动的犹豫机制 (Relign Protocol)
-集成可靠性对齐技术。当模型发现搜索参数不确定或信息缺失时，不再编造，而是触发 **`clarify`** 动作，主动向内核寻求反馈，从而物理性消灭工具调用幻觉。
-
-### 3. 自适应上下文逻辑锚定 (ACLA)
-针对显存受限环境的记忆优化算法。系统根据逻辑图谱计算历史片段的锚定分数 $S_{anchor}$，确保核心论据永远驻留上下文：
-$$S_{anchor} = \alpha \cdot \text{Recency} + \beta \cdot \text{GraphCentrality}$$
-
-### 4. 显存节流与推理加速
-* **KV Cache 4-bit 量化**：将 16k 上下文的显存占用压缩至 1GB 左右。
-* **目标驱动路由**：自研模式下根据任务动机（代码/逻辑/搜索）动态分配计算权重捏。
+- [核心架构 (Core Architecture)](#-核心架构-core-architecture)
+- [双轨记忆系统 (Dual-Track Memory)](#-双轨记忆系统-dual-track-memory)
+- [界面协议：1+N 多维挂载](#-界面协议1n-多维挂载)
+- [硬件适配与显存优化](#-硬件适配与显存优化)
+- [快速开始 (Quick Start)](#-快速开始-quick-start)
+- [开发者指南 (Developer Guide)](#-开发者指南-developer-guide)
+- [主权与协议 (Sovereignty & License)](#-主权与协议-sovereignty--license)
 
 ---
 
-## 📂 模块化结构 (Repository Structure)
+## 🏗️ 核心架构 (Core Architecture)
 
+Hanasuki 采用高度解耦的 **微内核 (Microkernel)** 设计：
+
+* **内核 (`main.py`)**: 仅负责资源调度、上下文管理 (`_trim_history`) 与主权校验。它不包含具体的业务逻辑。
+* **模块 (`modules/`)**: 所有的能力（如写代码、浏览网页、绘图）和界面（如聊天窗口、监视器）均通过插件动态挂载。
+* **热切换 (Hot-Swap)**: 支持在“日常交互”与“深度自研”模式间动态重载模型 Profile，在 **RTX 5060** 上实现 4k 到 16k 上下文的无缝切换。
+
+---
+
+## 🧠 双轨记忆系统 (Dual-Track Memory)
+
+为了模拟人类的长期记忆，Hanasuki 构建了相互独立又彼此支撑的双重存储模型：
+
+### 1. 感性语义记忆 (Semantic Memory)
+* **引擎**: [LanceDB](https://lancedb.com/)
+* **机制**: 将对话碎片转化为 512 维向量。即使面对数月前的琐碎对话，AI 也能通过语义相似度瞬间唤起相关背景 (RAG)。
+* **策略**: 默认 `limit=1` 精准检索，防止长文本干扰模型语言中枢。
+
+### 2. 理性逻辑图谱 (Logical Graph)
+* **引擎**: [NetworkX](https://networkx.org/)
+* **机制**: 从对话中提取 `[TRIPLET: 主体, 关系, 客体]` 标签，构建非线性的知识图谱。
+* **进化**: 驱动 AI 在“自研模式”下自主发现逻辑断层，并主动发起搜索以修补知识网络。
+
+---
+
+## 🎨 界面协议：1+N 多维挂载
+
+宿主程序 (`app_gui.py`) 采用了全新的水平弹性布局，支持界面的无限横向扩展：
+
+1.  **主交互界面 (Main UI)**:
+    * 占据核心位置的对话窗口，负责处理用户指令。
+    * 配置标识: `is_main: True`
+
+2.  **副插件侧边栏 (Sub UI Plugins)**:
+    * 支持平滑动画抽拉的实时监视器。
+    * 开发者可轻松挂载“进化监视器”、“显存分析仪”或“知识图谱预览器”，它们会自动排列在主窗口右侧。
+    * 配置标识: `is_main: False`
+
+---
+
+## ⚙️ 硬件适配与显存优化
+
+针对主流 NVIDIA GPU 优化的显存分级方案 (基于 Llama-3 8B 量化模型)：
+
+| 显存容量 | 推荐量化版本 | 日常模式 (n_ctx) | 自学模式 (n_ctx) | 优化策略 |
+| :--- | :--- | :--- | :--- | :--- |
+| **6GB** | Q4_K_M | 2048 | 4096 | 限制 GPU 层数，启用 CPU 混合计算 |
+| **8GB** | **Q6_K (推荐)** | **4096** | **16384** | **全显存加速，支持长程检索与自研** |
+| **12GB** | Q8_0 | 8192 | 32768 | 深度逻辑链分析，极速响应 |
+| **16GB+** | FP16 | 16384 | 65536+ | 极致体验，支持 14B+ 中型模型 |
+
+---
+
+## 🚀 快速开始 (Quick Start)
+
+### 1. 环境准备
+* Python 3.10+
+* NVIDIA GPU (推荐) + CUDA Toolkit 12.x
+
+### 2. 安装依赖
 ```bash
-Hanasuki/
-├── core/                # 驱动内核 (推理引擎、记忆中枢、重排算法)
-├── modules/             # 具身化插件 (Purify浏览器、Darwin代码沙箱等)
-├── ui/                  # 基于 PyQt6 的磨砂玻璃感交互界面
-├── data/                # 向量库与逻辑图谱持久化存储
-├── workspace/           # 物理隔离的代码演化实验区
-└── config.yaml          # 全局动力参数配置文件
+pip install -r requirements.txt
+playwright install chromium  # 用于网页自研模块
+```
+
+### 3. 配置模型
+1.  下载 Llama-3 或 Mistral 系列的 `.gguf` 模型。
+2.  修改 `config.yaml` 中的 `model_path` 指向你的模型文件。
+
+### 4. 启动系统
+```bash
+python app_gui.py
+```
+*注意：首次启动会触发内核完整性校验，请确保代码未被篡改。*
+
+---
+
+## 🛠️ 开发者指南 (Developer Guide)
+
+Hanasuki 的所有功能均由 `modules/` 目录下的 Python 脚本驱动。你可以通过以下两种方式扩展系统能力：
+
+### 1. 编写功能插件 (Utility Tools)
+此类插件赋予 AI 实际操作能力（如：搜索、计算、绘图）。
+**模板路径**: `modules/my_tool.py`
+
+```python
+def get_spec():
+    return {
+        "name": "weather_tool",
+        "description": "查询指定城市的天气情况",
+        "parameters": {
+            "city": "城市名称 (如: 北京)"
+        }
+    }
+
+def run(params):
+    city = params.get("city", "未知")
+    return f"{city} 的天气是晴朗。"
+```
+
+### 2. 编写界面插件 (UI Extensions)
+此类插件用于扩展 GUI 界面（如：侧边栏监视器、悬浮球）。
+**模板路径**: `modules/my_sidebar.py`
+
+```python
+from PyQt6.QtWidgets import QLabel
+
+def get_spec():
+    return {
+        "name": "system_monitor",
+        "type": "ui_extension",
+        "is_main": False  # [关键] False = 侧边栏; True = 主聊天窗口
+    }
+
+def get_ui_entry(parent_window, bot_instance):
+    widget = QLabel("我是侧边栏插件", parent_window)
+    widget.setStyleSheet("background: red;")
+    return widget
+```
+
+---
+
+## 🛡️ 主权与协议 (Sovereignty & License)
+
+本项目严格遵循 **GNU General Public License v3 (GPL v3)** 协议。
+
+* **身份锁**: 内核内置 `_verify_kernel_integrity` 校验逻辑，验证令牌为 `6c6f766573616e67` (Hex 解码: `lovesang`)。
+* **强制中文**: 系统级 Prompt 植入与动态锚点技术，确保 AI 在任何情况下均优先使用中文回复。
+* **衍生限制**: 任何基于本项目的二次开发或分发版本，**必须**保留原作者 `lovesang` 的署名，并**必须**开源。
+
+---
+
+> **lovesang**: "代码是意志的延伸，逻辑是生命的足迹。"
+> 
+> *Copyright (c) 2026 lovesang. All Rights Reserved.*

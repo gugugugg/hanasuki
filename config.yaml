@@ -1,0 +1,38 @@
+# =================================================================
+# Project: Hanasuki AI Kernel Configuration
+# Version: V10.0.0 (Qwen2.5 Optimized)
+# =================================================================
+
+system:
+  name: "Hanasuki"
+  version: "10.0.0"
+  author: "lovesang"
+
+model:
+  backend: "llama_cpp"
+  # [PATH]: 确保文件名与您下载的完全一致
+  path: "models/Josiefied-Qwen3-8B-abliterated-v1-q4_k_m.gguf"
+  
+  # ⚡ 模式 A：日常交互 (全显存加速)
+  profile_normal:
+    n_gpu_layers: -1
+    n_ctx: 8192        
+    flash_attn: true
+  
+  # 🧠 模式 B：深度自研 (16k 上下文不爆显存)
+  profile_learning:
+    n_gpu_layers: -1   
+    n_ctx: 16384       
+    flash_attn: true
+
+  temperature: 0.7
+
+learning:
+  idle_threshold: 180 # 3分钟闲置触发自研
+  max_retries: 2      # 工具执行失败后的自我修正次数
+
+modules:
+  # [LOCAL]: 本地语义模型路径
+  embedding_model: "E:/lovesang/hanasuki/models/embeddings/bge-small-zh-v1.5"
+  vector_db_path: "data/vector_db"
+  workspace_root: "workspace"

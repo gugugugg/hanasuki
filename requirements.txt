@@ -1,0 +1,22 @@
+# --- Hanasuki V9.0 Core Dependencies ---
+PyYAML>=6.0.1
+PyQt6>=6.6.1
+numpy>=1.26.0
+networkx>=3.2.1
+
+# --- LLM Backend (Recommend CUDA pre-installed) ---
+llama-cpp-python>=0.2.26
+
+# --- Long-Term Memory (Semantic + Rational) ---
+lancedb>=0.4.0
+pyarrow>=14.0.0
+sentence-transformers>=2.2.2
+torch>=2.2.0
+
+# --- Web & Tools ---
+playwright>=1.41.0
+beautifulsoup4>=4.12.2
+markdown2>=2.4.13
+
+# --- System Utils ---
+binascii
